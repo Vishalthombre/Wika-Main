@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Planner Dashboard</title>
+  <link rel="stylesheet" href="/css/planner.css">
+</head>
+<body>
+  <h1>📋 Planner Dashboard</h1>
+
+  <% if (tickets.length === 0) { %>
+    <p>No tickets to show</p>
+  <% } else { %>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Category</th>
+          <th>Location Details</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Assigned To</th>
+          <th>Assign Executer</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% tickets.forEach(ticket => { %>
+          <tr>
+            <td><%= ticket.id %></td>
+            <td><%= ticket.category %></td>
+
+            <!-- Location Info -->
+            <td>
+              <% if (ticket.category === 'Facility Service') { %>
+                <strong><%= ticket.building_no %></strong><br>
+                Area: <%= ticket.area_code %><br>
+                Sub Area: <%= ticket.sub_area %>
+              <% } else { %>
+                -
+              <% } %>
+            </td>
+
+            <td><%= ticket.description %></td>
+            <td><%= ticket.status %></td>
+            <td><%= ticket.assigned_to_name || 'Not Assigned' %></td>
+
+            <td>
+              <% if (ticket.status === 'Completed') { %>
+                ✅ Completed<br/>
+                <button onclick="showNote('<%= ticket.id %>')">View Completion</button>
+                <div id="note-<%= ticket.id %>" class="completion-note" style="display: none; margin-top: 10px;">
+                  <p><strong>Executer:</strong> <%= ticket.assigned_to_name %></p>
+                  <p><strong>Note:</strong> <%= ticket.completion_note %></p>
+                </div>
+              <% } else if (ticket.status === 'Assigned') { %>
+                Assigned to <%= ticket.assigned_to_name %>
+              <% } else if (ticket.status === 'In Progress') { %>
+                In Progress (by <%= ticket.assigned_to_name %>)
+              <% } else { %>
+                <form method="POST" action="/planner/assign">
+                  <input type="hidden" name="ticketId" value="<%= ticket.id %>">
+                  <select name="executerId" required>
+                    <option value="">Select Executer</option>
+                    <% executers.forEach(exec => { %>
+                      <option value="<%= exec.global_id %>"><%= exec.name %></option>
+                    <% }); %>
+                  </select>
+                  <button type="submit">Assign</button>
+                </form>
+              <% } %>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } %>
+
+  <a href="/logout">Logout</a>
+
+  <script>
+    function showNote(ticketId) {
+      const box = document.getElementById(`note-${ticketId}`);
+      if (box) {
+        box.style.display = box.style.display === 'none' ? 'block' : 'none';
+      }
+    }
+  </script>
+</body>
+</html>

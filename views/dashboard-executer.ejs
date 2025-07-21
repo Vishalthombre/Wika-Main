@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Executer Dashboard</title>
+  <link rel="stylesheet" href="/css/executer.css" />
+</head>
+<body>
+  <h1>👷‍♂️ Executer Dashboard</h1>
+
+  <% if (tickets.length === 0) { %>
+    <p>No tickets assigned.</p>
+  <% } else { %>
+    <table border="1" cellpadding="10">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Category</th>
+          <th>Location Details</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% tickets.forEach(ticket => { %>
+          <tr>
+            <td><%= ticket.id %></td>
+            <td><%= ticket.category %></td>
+
+            <td>
+              <% if (ticket.category === 'Facility Service') { %>
+                <strong><%= ticket.building_no %></strong><br>
+                Area: <%= ticket.area_code %><br>
+                Sub Area: <%= ticket.sub_area %>
+              <% } else { %>
+                -
+              <% } %>
+            </td>
+
+            <td><%= ticket.description %></td>
+            <td><%= ticket.status %></td>
+            <td>
+              <% if (ticket.status === 'Assigned') { %>
+                <form method="POST" action="/executer/start">
+  <input type="hidden" name="ticketId" value="<%= ticket.id %>">
+  <button type="submit">Start</button>
+</form>
+              <% } else if (ticket.status === 'In Progress') { %>
+                <form method="POST" action="/executer/complete">
+                  <input type="hidden" name="ticketId" value="<%= ticket.id %>">
+                  <textarea name="completion_note" placeholder="Add completion note" required></textarea>
+                  <button type="submit">Complete</button>
+                </form>
+              <% } else { %>
+                ✅ Completed
+              <% } %>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } %>
+
+  <a href="/logout">Logout</a>
+</body>
+</html>

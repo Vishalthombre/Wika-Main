@@ -1,6 +1,7 @@
 body {
   font-family: 'Segoe UI', sans-serif;
-  background-color: #f4f6f9;
+  background: url('/images/user_bg.jpg') no-repeat center center fixed;
+  background-size: cover;
 }
 
 h2 {

@@ -26,7 +26,12 @@ router.get('/dashboard/planner', requirePlanner, async (req, res) => {
       "SELECT global_id, name FROM users WHERE department = 'executer'"
     );
 
-    res.render('dashboard-planner', { tickets, executers });
+    res.render('dashboard-planner', {
+  tickets,
+  executers,
+  user: req.session.user // ✅ Add this line to fix the error
+});
+
   } catch (err) {
     console.error('Planner dashboard error:', err);
     res.send("Error loading planner dashboard");

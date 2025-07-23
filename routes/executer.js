@@ -25,7 +25,10 @@ router.get('/dashboard/executer', requireExecuter, async (req, res) => {
       ORDER BY t.created_at DESC
     `, [globalId]);
 
-    res.render('dashboard-executer', { tickets });
+  res.render('dashboard-executer', {
+  tickets,
+  user: req.session.user // ✅ Pass user to fix navbar include
+});
   } catch (err) {
     console.error('Executer dashboard error:', err);
     res.send('Error loading executer dashboard.');

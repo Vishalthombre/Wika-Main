@@ -1,5 +1,7 @@
 body {
-  background-color: #f4f6fa;
+  background: url('/images/user_bg.jpg') no-repeat center center fixed;
+  background-size: cover;
+  overflow-y: hidden;
   font-family: 'Segoe UI', sans-serif;
 }
 
